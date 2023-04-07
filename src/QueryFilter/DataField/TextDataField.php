@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Ekrouzek\FiltersBundle\QueryFilter\DataField;
+namespace Ekrouzek\PaginationFiltersBundle\QueryFilter\DataField;
 
-use Ekrouzek\FiltersBundle\QueryFilter\Exception\UnsupportedDataFieldMethodException;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\Exception\UnsupportedDataFieldMethodException;
 use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Expr\Comparison;
 use Doctrine\ORM\Query\Expr\Orx;

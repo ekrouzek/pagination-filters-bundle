@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Ekrouzek\FiltersBundle\QueryFilter\FilterToken;
+namespace Ekrouzek\PaginationFiltersBundle\QueryFilter\FilterToken;
 
-use Ekrouzek\FiltersBundle\QueryFilter\DataField\DataField;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\DataField\DataField;
 use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Expr\Comparison;
 use Doctrine\ORM\Query\Expr\Orx;

@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Ekrouzek\FiltersBundle\QueryFilter\FilterToken;
+namespace Ekrouzek\PaginationFiltersBundle\QueryFilter\FilterToken;
 
-use Ekrouzek\FiltersBundle\QueryFilter\Exception\FilterParseException;
-use Ekrouzek\FiltersBundle\QueryFilter\Exception\PaginationAndFilterException;
-use Ekrouzek\FiltersBundle\QueryFilter\QueryFilter;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\Exception\FilterParseException;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\Exception\PaginationAndFilterException;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\QueryFilter;
 use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Expr\Comparison;
 use Doctrine\ORM\Query\Expr\Orx;

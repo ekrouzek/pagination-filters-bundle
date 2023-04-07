@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Ekrouzek\FiltersBundle\QueryFilter\Exception;
+namespace Ekrouzek\PaginationFiltersBundle\QueryFilter\Exception;
 
-use Ekrouzek\FiltersBundle\QueryFilter\DataField\DataField;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\DataField\DataField;
 use Throwable;
 
 class UnsupportedDataFieldMethodException extends PaginationAndFilterException

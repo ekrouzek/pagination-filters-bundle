@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Ekrouzek\FiltersBundle\QueryFilter\FilterToken;
+namespace Ekrouzek\PaginationFiltersBundle\QueryFilter\FilterToken;
 
 use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Expr\Comparison;

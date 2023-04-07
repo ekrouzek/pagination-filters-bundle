@@ -1,6 +1,6 @@
 <?php
 
-namespace Ekrouzek\FiltersBundle\Sort;
+namespace Ekrouzek\PaginationFiltersBundle\Sort;
 
 class SortField
 {

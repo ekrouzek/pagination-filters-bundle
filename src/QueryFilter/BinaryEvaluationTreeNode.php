@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Ekrouzek\FiltersBundle\QueryFilter;
+namespace Ekrouzek\PaginationFiltersBundle\QueryFilter;
 
-use Ekrouzek\FiltersBundle\QueryFilter\FilterToken\FilterToken;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\FilterToken\FilterToken;
 
 /**
  * Structure to represent a single node in binary evaluation tree used for parsing the query filter string.

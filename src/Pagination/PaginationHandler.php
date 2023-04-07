@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Ekrouzek\FiltersBundle\Pagination;
+namespace Ekrouzek\PaginationFiltersBundle\Pagination;
 
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query;
-use Ekrouzek\FiltersBundle\QueryFilter\Exception\PaginationAndFilterException;
-use Ekrouzek\FiltersBundle\QueryFilter\QueryFilter;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\Exception\PaginationAndFilterException;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\QueryFilter;
 use Doctrine\ORM\QueryBuilder;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;

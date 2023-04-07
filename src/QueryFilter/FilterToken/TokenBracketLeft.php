@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Ekrouzek\FiltersBundle\QueryFilter\FilterToken;
+namespace Ekrouzek\PaginationFiltersBundle\QueryFilter\FilterToken;
 
 class TokenBracketLeft extends FilterToken
 {

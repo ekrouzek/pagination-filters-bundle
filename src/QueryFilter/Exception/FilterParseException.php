@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Ekrouzek\FiltersBundle\QueryFilter\Exception;
+namespace Ekrouzek\PaginationFiltersBundle\QueryFilter\Exception;
 
 use Throwable;
 

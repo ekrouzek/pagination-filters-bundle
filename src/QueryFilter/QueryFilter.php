@@ -1,26 +1,26 @@
 <?php declare(strict_types=1);
 
-namespace Ekrouzek\FiltersBundle\QueryFilter;
+namespace Ekrouzek\PaginationFiltersBundle\QueryFilter;
 
-use Ekrouzek\FiltersBundle\QueryFilter\DataField\BooleanDataField;
-use Ekrouzek\FiltersBundle\QueryFilter\DataField\DataField;
-use Ekrouzek\FiltersBundle\QueryFilter\DataField\DatetimeDataField;
-use Ekrouzek\FiltersBundle\QueryFilter\DataField\NumberDataField;
-use Ekrouzek\FiltersBundle\QueryFilter\DataField\TextDataField;
-use Ekrouzek\FiltersBundle\QueryFilter\Exception\PaginationAndFilterException;
-use Ekrouzek\FiltersBundle\QueryFilter\Exception\SortParseException;
-use Ekrouzek\FiltersBundle\QueryFilter\FilterToken\FilterToken;
-use Ekrouzek\FiltersBundle\QueryFilter\FilterToken\TokenAnd;
-use Ekrouzek\FiltersBundle\QueryFilter\FilterToken\TokenBracketLeft;
-use Ekrouzek\FiltersBundle\QueryFilter\FilterToken\TokenBracketRight;
-use Ekrouzek\FiltersBundle\QueryFilter\FilterToken\TokenExpression;
-use Ekrouzek\FiltersBundle\QueryFilter\FilterToken\TokenOr;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\DataField\BooleanDataField;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\DataField\DataField;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\DataField\DatetimeDataField;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\DataField\NumberDataField;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\DataField\TextDataField;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\Exception\PaginationAndFilterException;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\Exception\SortParseException;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\FilterToken\FilterToken;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\FilterToken\TokenAnd;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\FilterToken\TokenBracketLeft;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\FilterToken\TokenBracketRight;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\FilterToken\TokenExpression;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\FilterToken\TokenOr;
 use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Expr\Comparison;
 use Doctrine\ORM\Query\Expr\Orx;
 use Doctrine\ORM\QueryBuilder;
-use Ekrouzek\FiltersBundle\Sort\SortDirection;
-use Ekrouzek\FiltersBundle\Sort\SortField;
+use Ekrouzek\PaginationFiltersBundle\Sort\SortDirection;
+use Ekrouzek\PaginationFiltersBundle\Sort\SortField;
 use FOS\RestBundle\Request\ParamFetcher;
 
 class QueryFilter

@@ -10,7 +10,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Ekrouzek\\FiltersBundle\\": "src/"
+            "Ekrouzek\\PaginationFiltersBundle\\": "src/"
         }
     },
     "license": "MIT",

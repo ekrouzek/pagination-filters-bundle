@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Ekrouzek\FiltersBundle\QueryFilter\DataField;
+namespace Ekrouzek\PaginationFiltersBundle\QueryFilter\DataField;
 
-use Ekrouzek\FiltersBundle\QueryFilter\Exception\FilterParseException;
-use Ekrouzek\FiltersBundle\QueryFilter\Exception\UnsupportedDataFieldMethodException;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\Exception\FilterParseException;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\Exception\UnsupportedDataFieldMethodException;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use Doctrine\ORM\Query\Expr\Andx;
