@@ -1,0 +1,12 @@
+stages:
+  - deploy
+
+deploy:
+  image: curlimages/curl:latest
+  only:
+    - tags
+  stage: deploy
+  variables:
+    URL: "${CI_API_V4_URL}/projects/$CI_PROJECT_ID/packages/composer"
+  script:
+    - 'curl -sS --show-error --fail  --header "Deploy-Token: $DEPLOY_TOKEN" --data tag=${CI_COMMIT_TAG} $URL'

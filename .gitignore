@@ -1,0 +1,22 @@
+.idea/
+docker/
+docker-compose.yml
+
+
+###> symfony/framework-bundle ###
+.env.local
+.env.local.php
+.env.*.local
+vendor/
+var/
+###< symfony/framework-bundle ###
+
+###> squizlabs/php_codesniffer ###
+.phpcs-cache
+phpcs.xml
+###< squizlabs/php_codesniffer ###
+
+###> phpunit/phpunit ###
+phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###

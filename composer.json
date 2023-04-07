@@ -1,0 +1,23 @@
+{
+    "name": "ekrouzek/filters-bundle",
+    "description": "Filtering, sorting and pagination bundle for paginated http requests.",
+    "type": "symfony-bundle",
+    "require": {
+        "php": ">=8.0.1",
+        "nette/utils": "^3.2",
+        "friendsofsymfony/rest-bundle": "^3.3",
+        "doctrine/orm": "^2.11"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ekrouzek\\FiltersBundle\\": "src/"
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vojtěch Bešťák",
+            "homepage": "https://ekrouzek.cz"
+        }
+    ]
+}
