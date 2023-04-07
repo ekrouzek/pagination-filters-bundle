@@ -11,31 +11,27 @@ Symfony bundle that allows you to set paging, filtering and sorting for selected
 
 ## Installation
 
-### 1. Add the repository to composer
+### 1. Download the bundle
 
-First you need to add this repository as a source to `composer.json`.
-```json
-{
-   "repositories": {
-       "gitlab.com/12925620": {
-           "type": "composer",
-           "url": "https://gitlab.example.com/api/v4/group/12925620/-/packages/composer/"
-       }
-   }
-}
+To download the most up-to-date stable version of this bundle, open a command console, navigate to your project directory, and execute the following command:
+```bash
+composer require ekrouzek/pagination-filters-bundle
 ```
 
-### 2. Add the import itself
+### 2. Enable the bundle
+If Flex is being used, the bundle will be automatically enabled. However, if Flex is not being used, manual enabling of the bundle is required by adding the following line to the config/bundles.php file in your project.
 
-Furthermore, the bundle itself must be added to the `composer.json` file, specifically to the `require` block.
+```php
+<?php
+// config/bundles.php
 
-```json
-{
-   "require": {
-     "ekrouzek/filters-bundle": "1.0.*"
-   }
-}
+return [
+    // ...
+    Ekrouzek\PaginationFiltersBundle\PaginationFiltersBundle::class => ['all' => true],
+    // ...
+];
 ```
+
 
 <a name="implementation"></a>
 
