@@ -1,5 +1,5 @@
 {
-    "name": "ekrouzek/filters-bundle",
+    "name": "ekrouzek/pagination-filters-bundle",
     "description": "Filtering, sorting and pagination bundle for paginated http requests.",
     "type": "symfony-bundle",
     "require": {
