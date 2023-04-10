@@ -1,4 +1,4 @@
-# Filters bundle
+# Pagination and filters bundle
 
 Symfony bundle that allows you to set paging, filtering and sorting for selected API endpoints.
 
