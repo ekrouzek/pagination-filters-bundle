@@ -171,4 +171,4 @@ docker compose run --rm php composer test
 docker compose run --rm php composer phpstan
 ```
 
-The same `composer test` and `composer phpstan` commands also run in CI (see `.github/workflows/ci.yml`) on every push and pull request. Publishing to Packagist happens independently via a GitHub webhook that notifies Packagist on every push, so a tagged release goes out regardless of CI status — keep an eye on the workflow when tagging a release.
+The same `composer test` and `composer phpstan` commands also run in CI (see `.github/workflows/ci.yml`) before a tagged release is published to Packagist.
