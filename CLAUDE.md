@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A Symfony bundle (`ekrouzek/pagination-filters-bundle`) that adds pagination, filtering, and sorting to API endpoints built on FOSRestBundle + Doctrine ORM. It's a library, not an application, but it does have a PHPUnit test suite (see Testing below); there is no separate build step or linter config.
 
-Dependencies (see `composer.json`): PHP >=8.0.1, `friendsofsymfony/rest-bundle` (for `ParamFetcher`/`View`), `doctrine/orm`, `nette/utils` (for the `Paginator`), `symfony/uid` (for the `Uuid` data field).
+Dependencies (see `composer.json`): PHP >=8.0.1 (though `doctrine/orm` ^3.5 actually requires PHP ^8.1 — this constraint is currently inconsistent), `friendsofsymfony/rest-bundle` (for `ParamFetcher`/`View`), `doctrine/orm`, `nette/utils` (for the `Paginator`), `symfony/uid` (for the `Uuid` data field), `nesbot/carbon` (for datetime validation in `DatetimeDataField`).
 
 ## Testing
 
@@ -18,9 +18,9 @@ docker compose run --rm php composer test       # run the PHPUnit suite
 docker compose run --rm php composer phpstan    # run static analysis (level 6, see phpstan.neon.dist)
 ```
 
-Tests build a real Doctrine `QueryBuilder` against an in-memory SQLite database (`tests/Fixtures/EntityManagerFactory.php`) rather than mocking Doctrine, so filter/sort DQL output is checked against actual Doctrine behavior. Both `composer test` and `composer phpstan` run in CI (`.gitlab-ci.yml`, two jobs extending a shared `.php_base`) before a tagged release is published. `phpstan/phpstan-doctrine` is included so ORM entity properties (e.g. an `#[ORM\Id]` field only ever written via reflection) aren't flagged as unused. When adding a require to `composer.json`, use `docker compose run --rm php composer require <package>` (not a manual edit) so `composer.lock` stays in sync — an edited-but-unlocked require fails `composer install` in CI.
+Tests build a real Doctrine `QueryBuilder` against an in-memory SQLite database (`tests/Fixtures/EntityManagerFactory.php`) rather than mocking Doctrine, so filter/sort DQL output is checked against actual Doctrine behavior. Both `composer test` and `composer phpstan` run in CI (`.github/workflows/ci.yml`, separate `test`/`phpstan` jobs) on every push/PR. `phpstan/phpstan-doctrine` is included so ORM entity properties (e.g. an `#[ORM\Id]` field only ever written via reflection) aren't flagged as unused. When adding a require to `composer.json`, use `docker compose run --rm php composer require <package>` (not a manual edit) so `composer.lock` stays in sync — an edited-but-unlocked require fails `composer install` in CI.
 
-Publishing is via GitLab CI (`.gitlab-ci.yml`): pushing a git tag triggers a job that publishes the tagged version to a GitLab Composer package registry. There's no separate build step.
+Publishing is automatic: a GitHub webhook on this repo (Settings → Webhooks, pointing at Packagist's `api/github` endpoint) notifies Packagist on every push, so pushing a git tag alone re-syncs https://packagist.org/packages/ekrouzek/pagination-filters-bundle — no CI step is involved in publishing. `.github/workflows/ci.yml` only runs `test`/`phpstan` on push/PR as a correctness gate; it doesn't (and shouldn't) duplicate what the webhook already does. There's no separate build step.
 
 ## Architecture
 
