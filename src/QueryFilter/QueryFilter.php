@@ -7,6 +7,7 @@ use Ekrouzek\PaginationFiltersBundle\QueryFilter\DataField\DataField;
 use Ekrouzek\PaginationFiltersBundle\QueryFilter\DataField\DatetimeDataField;
 use Ekrouzek\PaginationFiltersBundle\QueryFilter\DataField\NumberDataField;
 use Ekrouzek\PaginationFiltersBundle\QueryFilter\DataField\TextDataField;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\DataField\UuidDataField;
 use Ekrouzek\PaginationFiltersBundle\QueryFilter\Exception\PaginationAndFilterException;
 use Ekrouzek\PaginationFiltersBundle\QueryFilter\Exception\SortParseException;
 use Ekrouzek\PaginationFiltersBundle\QueryFilter\FilterToken\FilterToken;
@@ -117,6 +118,18 @@ class QueryFilter
     public function addBooleanField(string $key, string $dbKey): QueryFilter
     {
         $this->dataFields[$key] = new BooleanDataField($key, $dbKey);
+        return $this;
+    }
+
+    /**
+     * Adds a **uuid** field to the registered fields.
+     * @param string $key The key that is used to translate the filter to db key.
+     * @param string $dbKey The key that is associated with the DQL passed in query builder.
+     * @return $this The QueryFilter itself for easy chaining.
+     */
+    public function addUuidField(string $key, string $dbKey): QueryFilter
+    {
+        $this->dataFields[$key] = new UuidDataField($key, $dbKey);
         return $this;
     }
 

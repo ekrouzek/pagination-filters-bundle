@@ -59,7 +59,7 @@ public function getCourses(ParamFetcher $paramFetcher, ...): View
 ### 2. Definition of filters
 
 Subsequently, it is enough to add the definition of which data can be filtered and sorted according to which at the same time to the given method:
-`addNumberField()`, `addTextField()`, `addDatetimeField()`, `addBooleanField()` methods are available. The first parameter of these functions is the key that will be presented to the outside - that is, which can be entered into the filter from the outside. The second parameter specifies to which attribute it is mapped in the specified DQL query (more below).
+`addNumberField()`, `addTextField()`, `addDatetimeField()`, `addBooleanField()`, `addUuidField()` methods are available. The first parameter of these functions is the key that will be presented to the outside - that is, which can be entered into the filter from the outside. The second parameter specifies to which attribute it is mapped in the specified DQL query (more below).
 
 So for example:
 ```php

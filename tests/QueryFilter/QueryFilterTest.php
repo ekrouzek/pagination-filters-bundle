@@ -18,7 +18,8 @@ class QueryFilterTest extends TestCase
             ->addNumberField('id', 'c.id')
             ->addTextField('name', 'c.name')
             ->addDatetimeField('created', 'c.created')
-            ->addBooleanField('active', 'c.active');
+            ->addBooleanField('active', 'c.active')
+            ->addUuidField('uuid', 'c.uuid');
     }
 
     private function createQueryBuilder(): \Doctrine\ORM\QueryBuilder
@@ -58,6 +59,32 @@ class QueryFilterTest extends TestCase
             . "WHERE c.active = '1' OR (LOWER(c.name) LIKE '%test%' AND c.id = '1')",
             $result->getDQL()
         );
+    }
+
+    public function testUuidFilterExpressionIsAppliedToQuery(): void
+    {
+        $queryFilter = $this->createFilteredQueryFilter();
+        $queryBuilder = $this->createQueryBuilder();
+        $paramFetcher = new ArrayParamFetcher(['filter' => 'eq:uuid:123e4567-e89b-12d3-a456-426614174000']);
+
+        $result = $queryFilter->filter($queryBuilder, $paramFetcher);
+
+        self::assertSame(
+            "SELECT c FROM Ekrouzek\PaginationFiltersBundle\Tests\Fixtures\Entity\Course c "
+            . "WHERE c.uuid = '123e4567-e89b-12d3-a456-426614174000'",
+            $result->getDQL()
+        );
+    }
+
+    public function testUuidFilterWithInvalidValueThrows(): void
+    {
+        $queryFilter = $this->createFilteredQueryFilter();
+        $queryBuilder = $this->createQueryBuilder();
+        $paramFetcher = new ArrayParamFetcher(['filter' => 'eq:uuid:not-a-uuid']);
+
+        $this->expectException(FilterParseException::class);
+
+        $queryFilter->filter($queryBuilder, $paramFetcher);
     }
 
     public function testFilterWithUnknownFieldKeyThrows(): void
