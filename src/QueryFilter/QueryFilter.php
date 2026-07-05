@@ -21,7 +21,7 @@ use Doctrine\ORM\Query\Expr\Orx;
 use Doctrine\ORM\QueryBuilder;
 use Ekrouzek\PaginationFiltersBundle\Sort\SortDirection;
 use Ekrouzek\PaginationFiltersBundle\Sort\SortField;
-use FOS\RestBundle\Request\ParamFetcher;
+use FOS\RestBundle\Request\ParamFetcherInterface;
 
 class QueryFilter
 {
@@ -56,7 +56,7 @@ class QueryFilter
      * @return QueryBuilder The altered query builder.
      * @throws PaginationAndFilterException If the parsing of the filter string is unsuccessful or the data passed are invalid.
      */
-    public function filter(QueryBuilder $queryBuilder, ParamFetcher $paramFetcher): QueryBuilder
+    public function filter(QueryBuilder $queryBuilder, ParamFetcherInterface $paramFetcher): QueryBuilder
     {
         /** @var string $filterString */
         $filterString = $paramFetcher->get('filter');
@@ -131,7 +131,7 @@ class QueryFilter
      * @return QueryBuilder The altered query builder.
      * @throws SortParseException If the parsing of the sort string is unsuccessful or the data passed are invalid.
      */
-    public function sort(QueryBuilder $queryBuilder, ParamFetcher $paramFetcher): QueryBuilder
+    public function sort(QueryBuilder $queryBuilder, ParamFetcherInterface $paramFetcher): QueryBuilder
     {
         if ($paramFetcher->get('sort') !== "") {
             /** @var string $sortString */

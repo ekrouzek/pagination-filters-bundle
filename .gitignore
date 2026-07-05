@@ -1,6 +1,6 @@
 .idea/
 docker/
-docker-compose.yml
+composer.lock
 
 
 ###> symfony/framework-bundle ###

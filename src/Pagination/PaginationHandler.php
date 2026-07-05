@@ -7,7 +7,7 @@ use Doctrine\ORM\Query;
 use Ekrouzek\PaginationFiltersBundle\QueryFilter\Exception\PaginationAndFilterException;
 use Ekrouzek\PaginationFiltersBundle\QueryFilter\QueryFilter;
 use Doctrine\ORM\QueryBuilder;
-use FOS\RestBundle\Request\ParamFetcher;
+use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\View\View;
 use Nette\Utils\Paginator;
 use Doctrine\ORM\Tools\Pagination\Paginator as OrmPaginator;
@@ -17,7 +17,7 @@ class PaginationHandler
     private Paginator $paginator;
     private ?QueryFilter $queryFilter;
 
-    public function __construct(private ParamFetcher $paramFetcher)
+    public function __construct(private ParamFetcherInterface $paramFetcher)
     {
         $this->paginator = new Paginator();
     }
@@ -51,10 +51,9 @@ class PaginationHandler
         $queryBuilder->setFirstResult($this->paginator->getOffset());
         $queryBuilder->setMaxResults($this->paginator->getLength());
 
-
-        //Set query hydration mode
-        $queryBuilder->getQuery()->setHydrationMode(AbstractQuery::HYDRATE_ARRAY);
-        $ormPaginator = new OrmPaginator($queryBuilder->getQuery());
+        $query = $queryBuilder->getQuery();
+        $query->setHydrationMode(AbstractQuery::HYDRATE_ARRAY);
+        $ormPaginator = new OrmPaginator($query);
         try {
             return $ormPaginator->getIterator()->getArrayCopy();
         } catch (\Exception $e) {

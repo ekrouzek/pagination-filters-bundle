@@ -5,6 +5,7 @@ Symfony bundle that allows you to set paging, filtering and sorting for selected
 1. [Installation](#installation)
 2. [Implementation](#implementation)
 3. [Usage](#usage)
+4. [Testing](#testing)
 
 
 <a name="installation"></a>
@@ -140,3 +141,21 @@ To use paging, filtering and paging, just add the corresponding GET parameters t
 - Sorting can therefore look, for example, like this:
    - `?sort=id:asc`
    - `?sort=created:desc`
+
+<a name="testing"></a>
+
+## Testing
+
+Tests run via PHPUnit and don't need a Symfony application to run against — the filter/sort tests build a real Doctrine `QueryBuilder` against an in-memory SQLite database.
+
+You don't need PHP or Composer installed locally; a Docker Compose setup is provided instead. From the project root:
+
+```bash
+# install dependencies
+docker compose run --rm php composer install
+
+# run the test suite
+docker compose run --rm php composer test
+```
+
+The same `composer test` command also runs in CI (see `.gitlab-ci.yml`) before a tagged release is published.
