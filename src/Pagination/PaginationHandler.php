@@ -15,7 +15,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator as OrmPaginator;
 class PaginationHandler
 {
     private Paginator $paginator;
-    private ?QueryFilter $queryFilter;
+    private ?QueryFilter $queryFilter = null;
 
     public function __construct(private ParamFetcherInterface $paramFetcher)
     {
@@ -95,7 +95,18 @@ class PaginationHandler
      */
     public function sendPaginatedResponse(array $items): View
     {
-        $result = [
+        return View::create($this->getPaginatedResponseData($items));
+    }
+
+    /**
+     * Builds the same pagination-wrapped data as @see sendPaginatedResponse(), without wrapping it in a View.
+     * Useful when the caller wants to serialize the response itself instead of using FOSRestBundle's View.
+     * @param array<int, array<string, mixed>> $items The data that should be displayed.
+     * @return array{_pagination: array{total: int, page: int, per_page: int}, items: array<int, array<string, mixed>>}
+     */
+    public function getPaginatedResponseData(array $items): array
+    {
+        return [
             '_pagination' => [
                 'total' => $this->getPaginator()->getItemCount(),
                 'page' => $this->getPaginator()->getPage(),
@@ -103,6 +114,5 @@ class PaginationHandler
             ],
             'items' => $items,
         ];
-        return View::create($result);
     }
 }

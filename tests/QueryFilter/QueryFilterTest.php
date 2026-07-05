@@ -162,4 +162,180 @@ class QueryFilterTest extends TestCase
 
         $queryFilter->sort($queryBuilder, $paramFetcher);
     }
+
+    public function testSortWithUnknownFieldKeyThrows(): void
+    {
+        $queryFilter = $this->createFilteredQueryFilter();
+        $queryBuilder = $this->createQueryBuilder();
+        $paramFetcher = new ArrayParamFetcher(['sort' => 'unknown:asc']);
+
+        $this->expectException(SortParseException::class);
+
+        $queryFilter->sort($queryBuilder, $paramFetcher);
+    }
+
+    public function testSortWithMalformedStringThrows(): void
+    {
+        $queryFilter = $this->createFilteredQueryFilter();
+        $queryBuilder = $this->createQueryBuilder();
+        $paramFetcher = new ArrayParamFetcher(['sort' => 'created:asc:extra']);
+
+        $this->expectException(SortParseException::class);
+
+        $queryFilter->sort($queryBuilder, $paramFetcher);
+    }
+
+    public function testSortFallsBackToDefaultSortWhenNoSortParamGiven(): void
+    {
+        $queryFilter = $this->createFilteredQueryFilter()->addDefaultSort('created', 'desc');
+        $queryBuilder = $this->createQueryBuilder();
+        $paramFetcher = new ArrayParamFetcher(['sort' => '']);
+
+        $result = $queryFilter->sort($queryBuilder, $paramFetcher);
+
+        self::assertSame(
+            'SELECT c FROM Ekrouzek\PaginationFiltersBundle\Tests\Fixtures\Entity\Course c ORDER BY c.created desc',
+            $result->getDQL()
+        );
+    }
+
+    public function testSortWithoutSortParamOrDefaultSortLeavesQueryUnchanged(): void
+    {
+        $queryFilter = $this->createFilteredQueryFilter();
+        $queryBuilder = $this->createQueryBuilder();
+        $paramFetcher = new ArrayParamFetcher(['sort' => '']);
+
+        $result = $queryFilter->sort($queryBuilder, $paramFetcher);
+
+        self::assertSame(
+            'SELECT c FROM Ekrouzek\PaginationFiltersBundle\Tests\Fixtures\Entity\Course c',
+            $result->getDQL()
+        );
+    }
+
+    public function testAddDefaultSortWithUnknownFieldKeyThrows(): void
+    {
+        $queryFilter = $this->createFilteredQueryFilter();
+
+        $this->expectException(SortParseException::class);
+
+        $queryFilter->addDefaultSort('unknown');
+    }
+
+    public function testAddDefaultSortWithInvalidDirectionThrows(): void
+    {
+        $queryFilter = $this->createFilteredQueryFilter();
+
+        $this->expectException(SortParseException::class);
+
+        $queryFilter->addDefaultSort('created', 'sideways');
+    }
+
+    public function testFilterWithEmptyStringLeavesQueryUnchanged(): void
+    {
+        $queryFilter = $this->createFilteredQueryFilter();
+        $queryBuilder = $this->createQueryBuilder();
+        $paramFetcher = new ArrayParamFetcher(['filter' => '']);
+
+        $result = $queryFilter->filter($queryBuilder, $paramFetcher);
+
+        self::assertSame(
+            'SELECT c FROM Ekrouzek\PaginationFiltersBundle\Tests\Fixtures\Entity\Course c',
+            $result->getDQL()
+        );
+    }
+
+    public function testFilterWithTooFewPartsThrows(): void
+    {
+        $queryFilter = $this->createFilteredQueryFilter();
+        $queryBuilder = $this->createQueryBuilder();
+        $paramFetcher = new ArrayParamFetcher(['filter' => 'eq:id']);
+
+        $this->expectException(FilterParseException::class);
+
+        $queryFilter->filter($queryBuilder, $paramFetcher);
+    }
+
+    public function testFilterWithUnsupportedOperatorThrows(): void
+    {
+        $queryFilter = $this->createFilteredQueryFilter();
+        $queryBuilder = $this->createQueryBuilder();
+        $paramFetcher = new ArrayParamFetcher(['filter' => 'unsupported:id:1']);
+
+        $this->expectException(FilterParseException::class);
+
+        $queryFilter->filter($queryBuilder, $paramFetcher);
+    }
+
+    public function testFilterWithExtraColonsInValueAreUnitedIntoThirdSlot(): void
+    {
+        $queryFilter = $this->createFilteredQueryFilter();
+        $queryBuilder = $this->createQueryBuilder();
+        $paramFetcher = new ArrayParamFetcher(['filter' => 'eq:created:2020-01-01 00:00:00']);
+
+        $result = $queryFilter->filter($queryBuilder, $paramFetcher);
+
+        self::assertSame(
+            "SELECT c FROM Ekrouzek\PaginationFiltersBundle\Tests\Fixtures\Entity\Course c WHERE c.created = '2020-01-01 00:00:00'",
+            $result->getDQL()
+        );
+    }
+
+    public function testIsNullAndIsNotNullFilterExpressions(): void
+    {
+        $queryFilter = $this->createFilteredQueryFilter();
+        $queryBuilder = $this->createQueryBuilder();
+        $paramFetcher = new ArrayParamFetcher(['filter' => 'is-null:name:']);
+
+        $result = $queryFilter->filter($queryBuilder, $paramFetcher);
+
+        self::assertSame(
+            'SELECT c FROM Ekrouzek\PaginationFiltersBundle\Tests\Fixtures\Entity\Course c WHERE c.name IS NULL',
+            $result->getDQL()
+        );
+    }
+
+    public function testIsMemberOfFilterExpression(): void
+    {
+        $queryFilter = $this->createFilteredQueryFilter()->addTextField('tags', 'c.tags');
+        $queryBuilder = $this->createQueryBuilder();
+        $paramFetcher = new ArrayParamFetcher(['filter' => 'is-member-of:tags:1']);
+
+        $result = $queryFilter->filter($queryBuilder, $paramFetcher);
+
+        self::assertSame(
+            'SELECT c FROM Ekrouzek\PaginationFiltersBundle\Tests\Fixtures\Entity\Course c WHERE 1 MEMBER OF c.tags',
+            $result->getDQL()
+        );
+    }
+
+    public function testInAndNotInFilterExpressions(): void
+    {
+        $queryFilter = $this->createFilteredQueryFilter();
+        $queryBuilder = $this->createQueryBuilder();
+        $paramFetcher = new ArrayParamFetcher(['filter' => 'in:id:1,2,3']);
+
+        $result = $queryFilter->filter($queryBuilder, $paramFetcher);
+
+        self::assertSame(
+            "SELECT c FROM Ekrouzek\PaginationFiltersBundle\Tests\Fixtures\Entity\Course c WHERE c.id IN('1', '2', '3')",
+            $result->getDQL()
+        );
+    }
+
+    public function testUuidFieldFilterExpression(): void
+    {
+        $queryFilter = $this->createFilteredQueryFilter()->addUuidField('uuid', 'c.uuid');
+        $queryBuilder = $this->createQueryBuilder();
+        $paramFetcher = new ArrayParamFetcher([
+            'filter' => 'eq:uuid:123e4567-e89b-12d3-a456-426614174000',
+        ]);
+
+        $result = $queryFilter->filter($queryBuilder, $paramFetcher);
+
+        self::assertSame(
+            "SELECT c FROM Ekrouzek\PaginationFiltersBundle\Tests\Fixtures\Entity\Course c WHERE c.uuid = '123e4567-e89b-12d3-a456-426614174000'",
+            $result->getDQL()
+        );
+    }
 }

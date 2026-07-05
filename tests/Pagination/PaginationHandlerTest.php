@@ -71,4 +71,68 @@ class PaginationHandlerTest extends TestCase
         self::assertSame('Chemistry', $result[0]['name']);
         self::assertSame(3, $handler->getPaginator()->getItemCount());
     }
+
+    public function testGetPaginatedDataWithoutCreateQueryFilterCall(): void
+    {
+        $paramFetcher = new ArrayParamFetcher([
+            'page' => 1,
+            'itemsPerPage' => 10,
+        ]);
+
+        $handler = new PaginationHandler($paramFetcher);
+
+        $result = $handler->getPaginatedData($this->createQueryBuilder());
+
+        self::assertCount(3, $result);
+    }
+
+    public function testSendPaginatedResponseWrapsItemsWithPaginationHeader(): void
+    {
+        $paramFetcher = new ArrayParamFetcher([
+            'page' => 1,
+            'itemsPerPage' => 2,
+            'filter' => '',
+            'sort' => '',
+        ]);
+
+        $handler = new PaginationHandler($paramFetcher);
+        $handler->createQueryFilter()->addTextField('name', 'c.name');
+        $items = $handler->getPaginatedData($this->createQueryBuilder());
+
+        $view = $handler->sendPaginatedResponse($items);
+
+        self::assertSame([
+            '_pagination' => [
+                'total' => 3,
+                'page' => 1,
+                'per_page' => 2,
+            ],
+            'items' => $items,
+        ], $view->getData());
+    }
+
+    public function testGetPaginatedResponseDataReturnsSameStructureWithoutView(): void
+    {
+        $paramFetcher = new ArrayParamFetcher([
+            'page' => 1,
+            'itemsPerPage' => 2,
+            'filter' => '',
+            'sort' => '',
+        ]);
+
+        $handler = new PaginationHandler($paramFetcher);
+        $handler->createQueryFilter()->addTextField('name', 'c.name');
+        $items = $handler->getPaginatedData($this->createQueryBuilder());
+
+        $data = $handler->getPaginatedResponseData($items);
+
+        self::assertSame([
+            '_pagination' => [
+                'total' => 3,
+                'page' => 1,
+                'per_page' => 2,
+            ],
+            'items' => $items,
+        ], $data);
+    }
 }
