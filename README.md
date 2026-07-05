@@ -111,6 +111,13 @@ $result = $this->courseService->formatMany($courses);
 return $paginationHandler->sendPaginatedResponse($result);
 ```
 
+If you don't use FOSRestBundle's `View` and want to serialize the response yourself, call `getPaginatedResponseData()` instead to get the same `_pagination`/`items` structure as a plain array:
+
+```php
+$result = $this->courseService->formatMany($courses);
+return $this->json($paginationHandler->getPaginatedResponseData($result));
+```
+
 <a name="usage"></a>
 
 ## Usage

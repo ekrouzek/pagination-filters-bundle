@@ -2,8 +2,9 @@
 
 namespace Ekrouzek\PaginationFiltersBundle\Tests\Fixtures;
 
+use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\SchemaTool;
 
 /**
@@ -14,15 +15,17 @@ class EntityManagerFactory
 {
     public static function create(): EntityManager
     {
-        $config = Setup::createAttributeMetadataConfiguration(
+        $config = ORMSetup::createAttributeMetadataConfiguration(
             paths: [__DIR__ . '/Entity'],
             isDevMode: true,
         );
 
-        $entityManager = EntityManager::create([
+        $connection = DriverManager::getConnection([
             'driver' => 'pdo_sqlite',
             'memory' => true,
         ], $config);
+
+        $entityManager = new EntityManager($connection, $config);
 
         $schemaTool = new SchemaTool($entityManager);
         $metadata = $entityManager->getMetadataFactory()->getAllMetadata();
