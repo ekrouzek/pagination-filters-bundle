@@ -68,6 +68,10 @@ class TokenExpression extends FilterToken
                 return $dataFields[$parts[1]]->isNotNull($queryBuilder);
             case 'is-member-of':
                 return $dataFields[$parts[1]]->isMemberOf($queryBuilder, $parts[2]);
+            case 'in':
+                return $dataFields[$parts[1]]->in($queryBuilder, $parts[2]);
+            case 'not-in':
+                return $dataFields[$parts[1]]->notIn($queryBuilder, $parts[2]);
         }
         throw new FilterParseException("Unsupported filter operation: '$parts[0]'");
     }

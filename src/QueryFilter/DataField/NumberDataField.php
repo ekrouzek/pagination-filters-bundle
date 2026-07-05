@@ -6,6 +6,7 @@ use Ekrouzek\PaginationFiltersBundle\QueryFilter\Exception\FilterParseException;
 use Ekrouzek\PaginationFiltersBundle\QueryFilter\Exception\UnsupportedDataFieldMethodException;
 use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Expr\Comparison;
+use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\Query\Expr\Orx;
 use Doctrine\ORM\QueryBuilder;
 
@@ -105,5 +106,40 @@ class NumberDataField extends DataField
             throw new FilterParseException("Value passed to number data field is non-numeric.");
         }
         return parent::gte($queryBuilder, $right);
+    }
+
+    /**
+     * @inheritDoc
+     * @throws FilterParseException If any value in the list isn't numeric.
+     */
+    public function in(QueryBuilder $queryBuilder, string $right): Andx|Orx|Comparison|Func|null
+    {
+        return $this->buildInExpr($queryBuilder, $this->validateAllNumeric($this->parseListValues($right)), false);
+    }
+
+    /**
+     * @inheritDoc
+     * @throws FilterParseException If any value in the list isn't numeric.
+     */
+    public function notIn(QueryBuilder $queryBuilder, string $right): Andx|Orx|Comparison|Func|null
+    {
+        return $this->buildInExpr($queryBuilder, $this->validateAllNumeric($this->parseListValues($right)), true);
+    }
+
+    /**
+     * Checks that every value in the given list is numeric.
+     *
+     * @param array<string> $values The values to check.
+     * @return array<string> The same values, if valid.
+     * @throws FilterParseException If any value isn't numeric.
+     */
+    private function validateAllNumeric(array $values): array
+    {
+        foreach ($values as $value) {
+            if (!is_numeric($value)) {
+                throw new FilterParseException("Value passed to number data field is non-numeric.");
+            }
+        }
+        return $values;
     }
 }

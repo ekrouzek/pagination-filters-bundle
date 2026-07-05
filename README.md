@@ -126,12 +126,15 @@ To use paging, filtering and paging, just add the corresponding GET parameters t
 
 - Filtering takes place via the `filter` parameter.
 - The filter must consist of individual expressions. One expression looks like this: `<method>:<field>:<value>`.
-- The method in the expression can be one of the following: `eq, neq, like, not-like, lt, lte, gt, gte`.
+- The method in the expression can be one of the following: `eq, neq, like, not-like, lt, lte, gt, gte, in, not-in`.
+- For `in` and `not-in`, the value is a comma-separated list of values, e.g. `in:id:1,2,3`.
 - Expressions can be combined into more complex constructions using logical conjunctions `&` (AND) and `|` (OR).
 - You can also use parentheses in expressions: `(` and `)`.
 - So the filter can look, for example, like this:
    - `?filter=eq:id:1`
    - `?filter=(eq:id:1 & like:name:"test") | gt:created:"2020-01-01 00:00:00"`
+   - `?filter=in:id:1,2,3`
+   - `?filter=not-in:name:"foo","bar"`
 
 #### Shifting
 

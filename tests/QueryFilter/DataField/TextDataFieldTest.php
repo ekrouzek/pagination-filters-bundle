@@ -4,6 +4,7 @@ namespace Ekrouzek\PaginationFiltersBundle\Tests\QueryFilter\DataField;
 
 use Doctrine\ORM\QueryBuilder;
 use Ekrouzek\PaginationFiltersBundle\QueryFilter\DataField\TextDataField;
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\Exception\FilterParseException;
 use Ekrouzek\PaginationFiltersBundle\QueryFilter\Exception\UnsupportedDataFieldMethodException;
 use Ekrouzek\PaginationFiltersBundle\Tests\Fixtures\EntityManagerFactory;
 use PHPUnit\Framework\TestCase;
@@ -51,5 +52,41 @@ class TextDataFieldTest extends TestCase
         $this->expectException(UnsupportedDataFieldMethodException::class);
 
         $field->gte($this->queryBuilder, '1');
+    }
+
+    public function testInStripsSurroundingQuotesFromEachValue(): void
+    {
+        $field = new TextDataField('name', 'c.name');
+
+        $expr = $field->in($this->queryBuilder, '"foo","bar",baz');
+
+        self::assertSame("c.name IN('foo', 'bar', 'baz')", (string) $expr);
+    }
+
+    public function testNotInStripsSurroundingQuotesFromEachValue(): void
+    {
+        $field = new TextDataField('name', 'c.name');
+
+        $expr = $field->notIn($this->queryBuilder, '"foo","bar"');
+
+        self::assertSame("c.name NOT IN('foo', 'bar')", (string) $expr);
+    }
+
+    public function testInRespectsCommasInsideQuotedValues(): void
+    {
+        $field = new TextDataField('name', 'c.name');
+
+        $expr = $field->in($this->queryBuilder, '"foo, bar","baz"');
+
+        self::assertSame("c.name IN('foo, bar', 'baz')", (string) $expr);
+    }
+
+    public function testInThrowsForEmptyValueList(): void
+    {
+        $field = new TextDataField('name', 'c.name');
+
+        $this->expectException(FilterParseException::class);
+
+        $field->in($this->queryBuilder, '');
     }
 }

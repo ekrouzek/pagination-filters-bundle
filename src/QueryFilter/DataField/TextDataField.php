@@ -5,6 +5,7 @@ namespace Ekrouzek\PaginationFiltersBundle\QueryFilter\DataField;
 use Ekrouzek\PaginationFiltersBundle\QueryFilter\Exception\UnsupportedDataFieldMethodException;
 use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Expr\Comparison;
+use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\Query\Expr\Orx;
 use Doctrine\ORM\QueryBuilder;
 
@@ -51,6 +52,34 @@ class TextDataField extends DataField
             $right = substr($right, 1, -1);
         }
         return parent::notLike($queryBuilder, $right);
+    }
+
+    /** @inheritDoc */
+    public function in(QueryBuilder $queryBuilder, string $right): Andx|Orx|Comparison|Func|null
+    {
+        return $this->buildInExpr($queryBuilder, $this->stripQuotesFromAll($this->parseListValues($right)), false);
+    }
+
+    /** @inheritDoc */
+    public function notIn(QueryBuilder $queryBuilder, string $right): Andx|Orx|Comparison|Func|null
+    {
+        return $this->buildInExpr($queryBuilder, $this->stripQuotesFromAll($this->parseListValues($right)), true);
+    }
+
+    /**
+     * Strips optional surrounding quotes from each value in the given list.
+     *
+     * @param array<string> $values The values to strip quotes from.
+     * @return array<string> The unquoted values.
+     */
+    private function stripQuotesFromAll(array $values): array
+    {
+        return array_map(function (string $value): string {
+            if (str_starts_with($value, '"') && str_ends_with($value, '"')) {
+                return substr($value, 1, -1);
+            }
+            return $value;
+        }, $values);
     }
 
     /**

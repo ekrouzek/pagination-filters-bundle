@@ -12,6 +12,7 @@ use PHPUnit\Framework\TestCase;
 class UuidDataFieldTest extends TestCase
 {
     private const VALID_UUID = '123e4567-e89b-12d3-a456-426614174000';
+    private const VALID_UUID_2 = '223e4567-e89b-12d3-a456-426614174001';
 
     private QueryBuilder $queryBuilder;
 
@@ -81,5 +82,38 @@ class UuidDataFieldTest extends TestCase
         $this->expectException(UnsupportedDataFieldMethodException::class);
 
         $field->gte($this->queryBuilder, self::VALID_UUID);
+    }
+
+    public function testInAcceptsListOfValidUuids(): void
+    {
+        $field = new UuidDataField('id', 'c.id');
+
+        $expr = $field->in($this->queryBuilder, self::VALID_UUID . ',"' . self::VALID_UUID_2 . '"');
+
+        self::assertSame(
+            "c.id IN('" . self::VALID_UUID . "', '" . self::VALID_UUID_2 . "')",
+            (string) $expr
+        );
+    }
+
+    public function testNotInAcceptsListOfValidUuids(): void
+    {
+        $field = new UuidDataField('id', 'c.id');
+
+        $expr = $field->notIn($this->queryBuilder, self::VALID_UUID . ',' . self::VALID_UUID_2);
+
+        self::assertSame(
+            "c.id NOT IN('" . self::VALID_UUID . "', '" . self::VALID_UUID_2 . "')",
+            (string) $expr
+        );
+    }
+
+    public function testInThrowsForInvalidUuidInList(): void
+    {
+        $field = new UuidDataField('id', 'c.id');
+
+        $this->expectException(FilterParseException::class);
+
+        $field->in($this->queryBuilder, self::VALID_UUID . ',not-a-uuid');
     }
 }

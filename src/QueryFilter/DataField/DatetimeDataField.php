@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Expr\Comparison;
+use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\Query\Expr\Orx;
 use Doctrine\ORM\QueryBuilder;
 
@@ -126,6 +127,44 @@ class DatetimeDataField extends DataField
             throw new FilterParseException("Value passed to datetime data field is not in a datetime format.");
         }
         return parent::gte($queryBuilder, $right);
+    }
+
+    /**
+     * @inheritDoc
+     * @throws FilterParseException If any value in the list isn't in datetime format.
+     */
+    public function in(QueryBuilder $queryBuilder, string $right): Andx|Orx|Comparison|Func|null
+    {
+        return $this->buildInExpr($queryBuilder, $this->stripQuotesAndValidateAll($this->parseListValues($right)), false);
+    }
+
+    /**
+     * @inheritDoc
+     * @throws FilterParseException If any value in the list isn't in datetime format.
+     */
+    public function notIn(QueryBuilder $queryBuilder, string $right): Andx|Orx|Comparison|Func|null
+    {
+        return $this->buildInExpr($queryBuilder, $this->stripQuotesAndValidateAll($this->parseListValues($right)), true);
+    }
+
+    /**
+     * Strips optional surrounding quotes and validates that each value is a valid datetime.
+     *
+     * @param array<string> $values The raw values.
+     * @return array<string> The unquoted, validated values.
+     * @throws FilterParseException If any value isn't in datetime format.
+     */
+    private function stripQuotesAndValidateAll(array $values): array
+    {
+        return array_map(function (string $value): string {
+            if (str_starts_with($value, '"') && str_ends_with($value, '"')) {
+                $value = substr($value, 1, -1);
+            }
+            if (!$this->checkValidDateTime($value)) {
+                throw new FilterParseException("Value passed to datetime data field is not in a datetime format.");
+            }
+            return $value;
+        }, $values);
     }
 
     /**

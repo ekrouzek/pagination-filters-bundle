@@ -2,8 +2,10 @@
 
 namespace Ekrouzek\PaginationFiltersBundle\QueryFilter\DataField;
 
+use Ekrouzek\PaginationFiltersBundle\QueryFilter\Exception\FilterParseException;
 use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Expr\Comparison;
+use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\Query\Expr\Orx;
 use Doctrine\ORM\QueryBuilder;
 
@@ -171,5 +173,81 @@ abstract class DataField
     public function isMemberOf(QueryBuilder $queryBuilder, string $right): Comparison
     {
         return $queryBuilder->expr()->isMemberOf($right, $this->dbKey);
+    }
+
+    /**
+     * Creates an "IN" comparison expression with the given comma-separated list of values.
+     *
+     * @param QueryBuilder $queryBuilder The query builder to create expr objects.
+     * @param string $right The comma-separated list of values (the right operand).
+     * @return Andx|Orx|Comparison|Func|null The created expr object.
+     * @throws FilterParseException If the value list is empty.
+     */
+    public function in(QueryBuilder $queryBuilder, string $right): Andx|Orx|Comparison|Func|null
+    {
+        return $this->buildInExpr($queryBuilder, $this->parseListValues($right), false);
+    }
+
+    /**
+     * Creates a "NOT IN" comparison expression with the given comma-separated list of values.
+     *
+     * @param QueryBuilder $queryBuilder The query builder to create expr objects.
+     * @param string $right The comma-separated list of values (the right operand).
+     * @return Andx|Orx|Comparison|Func|null The created expr object.
+     * @throws FilterParseException If the value list is empty.
+     */
+    public function notIn(QueryBuilder $queryBuilder, string $right): Andx|Orx|Comparison|Func|null
+    {
+        return $this->buildInExpr($queryBuilder, $this->parseListValues($right), true);
+    }
+
+    /**
+     * Splits a comma-separated list of values, respecting double-quoted segments so that
+     * commas inside quotes don't get split on.
+     *
+     * @param string $right The raw comma-separated value list.
+     * @return array<string> The individual (still possibly quoted) values.
+     * @throws FilterParseException If the value list is empty.
+     */
+    protected function parseListValues(string $right): array
+    {
+        if (trim($right) === '') {
+            throw new FilterParseException("Value list passed to '" . $this->getName() . "' data field must not be empty.");
+        }
+
+        $values = [];
+        $current = '';
+        $inQuotes = false;
+        foreach (str_split($right) as $char) {
+            if ($char === '"') {
+                $inQuotes = !$inQuotes;
+                $current .= $char;
+            } elseif ($char === ',' && !$inQuotes) {
+                $values[] = trim($current);
+                $current = '';
+            } else {
+                $current .= $char;
+            }
+        }
+        $values[] = trim($current);
+
+        return $values;
+    }
+
+    /**
+     * Builds an "IN" or "NOT IN" comparison expression from the given values.
+     *
+     * @param QueryBuilder $queryBuilder The query builder to create expr objects.
+     * @param array<string> $values The values to compare against.
+     * @param bool $negate Whether to build a "NOT IN" expression instead of an "IN" expression.
+     * @return Func The created expr object.
+     */
+    protected function buildInExpr(QueryBuilder $queryBuilder, array $values, bool $negate): Func
+    {
+        $literals = array_map(fn (string $value) => $queryBuilder->expr()->literal($value), $values);
+
+        return $negate
+            ? $queryBuilder->expr()->notIn($this->dbKey, $literals)
+            : $queryBuilder->expr()->in($this->dbKey, $literals);
     }
 }

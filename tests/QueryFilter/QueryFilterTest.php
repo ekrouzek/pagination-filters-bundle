@@ -87,6 +87,46 @@ class QueryFilterTest extends TestCase
         $queryFilter->filter($queryBuilder, $paramFetcher);
     }
 
+    public function testInFilterExpressionIsAppliedToQuery(): void
+    {
+        $queryFilter = $this->createFilteredQueryFilter();
+        $queryBuilder = $this->createQueryBuilder();
+        $paramFetcher = new ArrayParamFetcher(['filter' => 'in:id:1,2,3']);
+
+        $result = $queryFilter->filter($queryBuilder, $paramFetcher);
+
+        self::assertSame(
+            "SELECT c FROM Ekrouzek\PaginationFiltersBundle\Tests\Fixtures\Entity\Course c WHERE c.id IN('1', '2', '3')",
+            $result->getDQL()
+        );
+    }
+
+    public function testNotInFilterExpressionIsAppliedToQuery(): void
+    {
+        $queryFilter = $this->createFilteredQueryFilter();
+        $queryBuilder = $this->createQueryBuilder();
+        $paramFetcher = new ArrayParamFetcher(['filter' => 'not-in:name:"foo","bar"']);
+
+        $result = $queryFilter->filter($queryBuilder, $paramFetcher);
+
+        self::assertSame(
+            "SELECT c FROM Ekrouzek\PaginationFiltersBundle\Tests\Fixtures\Entity\Course c "
+            . "WHERE c.name NOT IN('foo', 'bar')",
+            $result->getDQL()
+        );
+    }
+
+    public function testInFilterWithNonNumericValueThrowsForNumberField(): void
+    {
+        $queryFilter = $this->createFilteredQueryFilter();
+        $queryBuilder = $this->createQueryBuilder();
+        $paramFetcher = new ArrayParamFetcher(['filter' => 'in:id:1,not-a-number']);
+
+        $this->expectException(FilterParseException::class);
+
+        $queryFilter->filter($queryBuilder, $paramFetcher);
+    }
+
     public function testFilterWithUnknownFieldKeyThrows(): void
     {
         $queryFilter = $this->createFilteredQueryFilter();

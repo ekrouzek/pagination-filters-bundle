@@ -6,6 +6,7 @@ use Ekrouzek\PaginationFiltersBundle\QueryFilter\Exception\FilterParseException;
 use Ekrouzek\PaginationFiltersBundle\QueryFilter\Exception\UnsupportedDataFieldMethodException;
 use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Expr\Comparison;
+use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\Query\Expr\Orx;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Uid\Uuid;
@@ -88,6 +89,26 @@ class UuidDataField extends DataField
     public function gte(QueryBuilder $queryBuilder, string $right): Andx|Orx|Comparison|null
     {
         throw new UnsupportedDataFieldMethodException("gte", $this);
+    }
+
+    /**
+     * @inheritDoc
+     * @throws FilterParseException If any value in the list isn't a valid UUID.
+     */
+    public function in(QueryBuilder $queryBuilder, string $right): Andx|Orx|Comparison|Func|null
+    {
+        $values = array_map(fn (string $value): string => $this->stripQuotesAndValidate($value), $this->parseListValues($right));
+        return $this->buildInExpr($queryBuilder, $values, false);
+    }
+
+    /**
+     * @inheritDoc
+     * @throws FilterParseException If any value in the list isn't a valid UUID.
+     */
+    public function notIn(QueryBuilder $queryBuilder, string $right): Andx|Orx|Comparison|Func|null
+    {
+        $values = array_map(fn (string $value): string => $this->stripQuotesAndValidate($value), $this->parseListValues($right));
+        return $this->buildInExpr($queryBuilder, $values, true);
     }
 
     /**
