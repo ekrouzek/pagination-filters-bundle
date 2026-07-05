@@ -10,11 +10,14 @@ use FOS\RestBundle\Request\ParamFetcherInterface;
  */
 class ArrayParamFetcher implements ParamFetcherInterface
 {
+    /**
+     * @param array<string, mixed> $params
+     */
     public function __construct(private array $params)
     {
     }
 
-    public function setController(callable $controller)
+    public function setController(callable $controller): void
     {
     }
 
@@ -23,6 +26,9 @@ class ArrayParamFetcher implements ParamFetcherInterface
         return $this->params[$name] ?? null;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function all(bool $strict = false)
     {
         return $this->params;

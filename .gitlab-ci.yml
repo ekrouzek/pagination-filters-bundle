@@ -2,16 +2,25 @@ stages:
   - test
   - deploy
 
-test:
+.php_base:
   image: php:8.1-cli
-  stage: test
   before_script:
     - apt-get update && apt-get install -y --no-install-recommends libsqlite3-dev unzip git
     - docker-php-ext-install pdo_sqlite
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     - composer install --no-progress --no-interaction
+
+test:
+  extends: .php_base
+  stage: test
   script:
     - composer test
+
+phpstan:
+  extends: .php_base
+  stage: test
+  script:
+    - composer phpstan
 
 deploy:
   image: curlimages/curl:latest

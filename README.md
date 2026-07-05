@@ -159,6 +159,9 @@ docker compose run --rm php composer install
 
 # run the test suite
 docker compose run --rm php composer test
+
+# run static analysis (PHPStan)
+docker compose run --rm php composer phpstan
 ```
 
-The same `composer test` command also runs in CI (see `.gitlab-ci.yml`) before a tagged release is published.
+The same `composer test` and `composer phpstan` commands also run in CI (see `.gitlab-ci.yml`) before a tagged release is published.

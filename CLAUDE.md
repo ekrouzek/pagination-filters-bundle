@@ -15,9 +15,10 @@ PHP/Composer don't need to be installed locally — a Docker Compose setup (`.do
 ```bash
 docker compose run --rm php composer install   # install/update dependencies
 docker compose run --rm php composer test       # run the PHPUnit suite
+docker compose run --rm php composer phpstan    # run static analysis (level 6, see phpstan.neon.dist)
 ```
 
-Tests build a real Doctrine `QueryBuilder` against an in-memory SQLite database (`tests/Fixtures/EntityManagerFactory.php`) rather than mocking Doctrine, so filter/sort DQL output is checked against actual Doctrine behavior. The same `composer test` command runs in CI (`.gitlab-ci.yml`) before a tagged release is published. When adding a require to `composer.json`, use `docker compose run --rm php composer require <package>` (not a manual edit) so `composer.lock` stays in sync — an edited-but-unlocked require fails `composer install` in CI.
+Tests build a real Doctrine `QueryBuilder` against an in-memory SQLite database (`tests/Fixtures/EntityManagerFactory.php`) rather than mocking Doctrine, so filter/sort DQL output is checked against actual Doctrine behavior. Both `composer test` and `composer phpstan` run in CI (`.gitlab-ci.yml`, two jobs extending a shared `.php_base`) before a tagged release is published. `phpstan/phpstan-doctrine` is included so ORM entity properties (e.g. an `#[ORM\Id]` field only ever written via reflection) aren't flagged as unused. When adding a require to `composer.json`, use `docker compose run --rm php composer require <package>` (not a manual edit) so `composer.lock` stays in sync — an edited-but-unlocked require fails `composer install` in CI.
 
 Publishing is via GitLab CI (`.gitlab-ci.yml`): pushing a git tag triggers a job that publishes the tagged version to a GitLab Composer package registry. There's no separate build step.
 

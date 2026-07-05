@@ -41,7 +41,7 @@ abstract class FilterToken
      * @param mixed $exprLeft The left expr object to combine.
      * @param mixed $exprRight The right expr object to combine.
      * @param array<DataField> &$dataFields The array of configured data fields for translation.
-     * @return Andx|Orx|Comparison|null The combined expr object.
+     * @return Andx|Orx|Comparison|string|null The combined expr object.
      */
     public function combineExpr(QueryBuilder $queryBuilder, mixed $exprLeft, mixed $exprRight, array &$dataFields): mixed
     {

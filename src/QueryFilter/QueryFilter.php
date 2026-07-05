@@ -53,7 +53,7 @@ class QueryFilter
      * *?filter=(eq:id:1 & like:name:"test") | gt:created:"2020-01-01 00:00:00"*
      *
      * @param QueryBuilder $queryBuilder The query builder to alter with filter.
-     * @param ParamFetcher $paramFetcher The query parameters from the request.
+     * @param ParamFetcherInterface $paramFetcher The query parameters from the request.
      * @return QueryBuilder The altered query builder.
      * @throws PaginationAndFilterException If the parsing of the filter string is unsuccessful or the data passed are invalid.
      */
@@ -140,7 +140,7 @@ class QueryFilter
      * *"?sort=field:[asc,desc]"*
      *
      * @param QueryBuilder $queryBuilder The query builder to alter with sort.
-     * @param ParamFetcher $paramFetcher The query parameters from the request.
+     * @param ParamFetcherInterface $paramFetcher The query parameters from the request.
      * @return QueryBuilder The altered query builder.
      * @throws SortParseException If the parsing of the sort string is unsuccessful or the data passed are invalid.
      */

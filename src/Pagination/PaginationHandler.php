@@ -25,7 +25,7 @@ class PaginationHandler
     /**
      * Get a query result that is filtered, sorted and paginated.
      * @param QueryBuilder $queryBuilder The prepared query to process.
-     * @return array The executed query after filter, sort and pagination were applied.
+     * @return array<int, array<string, mixed>> The executed query after filter, sort and pagination were applied.
      * @throws PaginationAndFilterException
      */
     public function getPaginatedData(QueryBuilder $queryBuilder): array
@@ -55,7 +55,7 @@ class PaginationHandler
         $query->setHydrationMode(AbstractQuery::HYDRATE_ARRAY);
         $ormPaginator = new OrmPaginator($query);
         try {
-            return $ormPaginator->getIterator()->getArrayCopy();
+            return iterator_to_array($ormPaginator->getIterator());
         } catch (\Exception $e) {
             throw new PaginationAndFilterException("Unexpected error while paginating.");
         }
@@ -91,7 +91,7 @@ class PaginationHandler
 
     /**
      * Creates a header for the pagination
-     * @param array $items The data that should be displayed.
+     * @param array<int, array<string, mixed>> $items The data that should be displayed.
      */
     public function sendPaginatedResponse(array $items): View
     {
