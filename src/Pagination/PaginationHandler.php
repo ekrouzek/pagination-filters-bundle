@@ -23,11 +23,13 @@ class PaginationHandler
 
     /**
      * Get a query result that is filtered, sorted and paginated.
+     * @template T of object
      * @param QueryBuilder $queryBuilder The prepared query to process.
-     * @return array<int, object> The executed query after filter, sort and pagination were applied.
+     * @param class-string<T> $entityClass The entity class being queried, used only to type the return value for static analysis.
+     * @return array<int, T> The executed query after filter, sort and pagination were applied.
      * @throws PaginationAndFilterException
      */
-    public function getPaginatedData(QueryBuilder $queryBuilder): array
+    public function getPaginatedData(QueryBuilder $queryBuilder, string $entityClass = \stdClass::class): array
     {
         if ($this->queryFilter !== null) {
             if ($this->paramFetcher->get('filter') !== "") {

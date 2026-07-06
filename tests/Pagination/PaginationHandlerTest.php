@@ -44,7 +44,7 @@ class PaginationHandlerTest extends TestCase
             ->addTextField('name', 'c.name')
             ->addBooleanField('active', 'c.active');
 
-        $result = $handler->getPaginatedData($this->createQueryBuilder());
+        $result = $handler->getPaginatedData($this->createQueryBuilder(), Course::class);
 
         self::assertCount(2, $result);
         self::assertSame('Biology', $result[0]->getName());
@@ -65,7 +65,7 @@ class PaginationHandlerTest extends TestCase
         $handler = new PaginationHandler($paramFetcher);
         $handler->createQueryFilter()->addTextField('name', 'c.name');
 
-        $result = $handler->getPaginatedData($this->createQueryBuilder());
+        $result = $handler->getPaginatedData($this->createQueryBuilder(), Course::class);
 
         self::assertCount(1, $result);
         self::assertSame('Chemistry', $result[0]->getName());
@@ -81,7 +81,7 @@ class PaginationHandlerTest extends TestCase
 
         $handler = new PaginationHandler($paramFetcher);
 
-        $result = $handler->getPaginatedData($this->createQueryBuilder());
+        $result = $handler->getPaginatedData($this->createQueryBuilder(), Course::class);
 
         self::assertCount(3, $result);
     }
@@ -97,7 +97,7 @@ class PaginationHandlerTest extends TestCase
 
         $handler = new PaginationHandler($paramFetcher);
         $handler->createQueryFilter()->addTextField('name', 'c.name');
-        $items = $handler->getPaginatedData($this->createQueryBuilder());
+        $items = $handler->getPaginatedData($this->createQueryBuilder(), Course::class);
 
         $view = $handler->sendPaginatedResponse($items);
 
@@ -122,7 +122,7 @@ class PaginationHandlerTest extends TestCase
 
         $handler = new PaginationHandler($paramFetcher);
         $handler->createQueryFilter()->addTextField('name', 'c.name');
-        $items = $handler->getPaginatedData($this->createQueryBuilder());
+        $items = $handler->getPaginatedData($this->createQueryBuilder(), Course::class);
 
         $data = $handler->getPaginatedResponseData($items);
 

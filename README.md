@@ -94,7 +94,7 @@ To get the final result of the query, just call `->getPaginatedData($query)` in 
 $query = $this->courseService->getAllCoursesQuery();
 
 try {
-     $courses = $paginationHandler->getPaginatedData($query);
+     $courses = $paginationHandler->getPaginatedData($query, Course::class);
 } catch (PaginationAndFilterException $exception) {
      return $this->sendBadRequest($exception->getMessage());
 }
