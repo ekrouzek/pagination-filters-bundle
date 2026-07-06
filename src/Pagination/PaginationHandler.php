@@ -2,7 +2,6 @@
 
 namespace Ekrouzek\PaginationFiltersBundle\Pagination;
 
-use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query;
 use Ekrouzek\PaginationFiltersBundle\QueryFilter\Exception\PaginationAndFilterException;
 use Ekrouzek\PaginationFiltersBundle\QueryFilter\QueryFilter;
@@ -25,7 +24,7 @@ class PaginationHandler
     /**
      * Get a query result that is filtered, sorted and paginated.
      * @param QueryBuilder $queryBuilder The prepared query to process.
-     * @return array<int, array<string, mixed>> The executed query after filter, sort and pagination were applied.
+     * @return array<int, object> The executed query after filter, sort and pagination were applied.
      * @throws PaginationAndFilterException
      */
     public function getPaginatedData(QueryBuilder $queryBuilder): array
@@ -52,7 +51,6 @@ class PaginationHandler
         $queryBuilder->setMaxResults($this->paginator->getLength());
 
         $query = $queryBuilder->getQuery();
-        $query->setHydrationMode(AbstractQuery::HYDRATE_ARRAY);
         $ormPaginator = new OrmPaginator($query);
         try {
             return iterator_to_array($ormPaginator->getIterator());
@@ -91,7 +89,7 @@ class PaginationHandler
 
     /**
      * Creates a header for the pagination
-     * @param array<int, array<string, mixed>> $items The data that should be displayed.
+     * @param array<int, mixed> $items The data that should be displayed.
      */
     public function sendPaginatedResponse(array $items): View
     {
@@ -101,8 +99,8 @@ class PaginationHandler
     /**
      * Builds the same pagination-wrapped data as @see sendPaginatedResponse(), without wrapping it in a View.
      * Useful when the caller wants to serialize the response itself instead of using FOSRestBundle's View.
-     * @param array<int, array<string, mixed>> $items The data that should be displayed.
-     * @return array{_pagination: array{total: int, page: int, per_page: int}, items: array<int, array<string, mixed>>}
+     * @param array<int, mixed> $items The data that should be displayed.
+     * @return array{_pagination: array{total: int, page: int, per_page: int}, items: array<int, mixed>}
      */
     public function getPaginatedResponseData(array $items): array
     {

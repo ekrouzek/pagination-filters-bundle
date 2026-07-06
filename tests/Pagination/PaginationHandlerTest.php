@@ -47,8 +47,8 @@ class PaginationHandlerTest extends TestCase
         $result = $handler->getPaginatedData($this->createQueryBuilder());
 
         self::assertCount(2, $result);
-        self::assertSame('Biology', $result[0]['name']);
-        self::assertSame('Algebra', $result[1]['name']);
+        self::assertSame('Biology', $result[0]->getName());
+        self::assertSame('Algebra', $result[1]->getName());
         self::assertSame(2, $handler->getPaginator()->getItemCount());
         self::assertSame(1, $handler->getPaginator()->getPage());
     }
@@ -68,7 +68,7 @@ class PaginationHandlerTest extends TestCase
         $result = $handler->getPaginatedData($this->createQueryBuilder());
 
         self::assertCount(1, $result);
-        self::assertSame('Chemistry', $result[0]['name']);
+        self::assertSame('Chemistry', $result[0]->getName());
         self::assertSame(3, $handler->getPaginator()->getItemCount());
     }
 
