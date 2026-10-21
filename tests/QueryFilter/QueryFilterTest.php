@@ -147,7 +147,7 @@ class QueryFilterTest extends TestCase
         $result = $queryFilter->sort($queryBuilder, $paramFetcher);
 
         self::assertSame(
-            'SELECT c FROM Ekrouzek\PaginationFiltersBundle\Tests\Fixtures\Entity\Course c ORDER BY c.created desc',
+            'SELECT c FROM Ekrouzek\PaginationFiltersBundle\Tests\Fixtures\Entity\Course c ORDER BY c.created DESC',
             $result->getDQL()
         );
     }
@@ -194,7 +194,7 @@ class QueryFilterTest extends TestCase
         $result = $queryFilter->sort($queryBuilder, $paramFetcher);
 
         self::assertSame(
-            'SELECT c FROM Ekrouzek\PaginationFiltersBundle\Tests\Fixtures\Entity\Course c ORDER BY c.created desc',
+            'SELECT c FROM Ekrouzek\PaginationFiltersBundle\Tests\Fixtures\Entity\Course c ORDER BY c.created DESC',
             $result->getDQL()
         );
     }
