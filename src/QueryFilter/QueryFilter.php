@@ -170,7 +170,7 @@ class QueryFilter
 
         foreach ($sortBys as $sortField) {
             $dbKey = $this->dataFields[$sortField->getKey()]->getDbKey();
-            $queryBuilder->addOrderBy($dbKey, $sortField->getDirection());
+            $queryBuilder->addOrderBy($dbKey, strtoupper($sortField->getDirection()));
         }
 
         return $queryBuilder;
