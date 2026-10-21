@@ -172,5 +172,3 @@ docker compose run --rm php composer phpstan
 ```
 
 The same `composer test` and `composer phpstan` commands also run in CI (see `.github/workflows/ci.yml`) before a tagged release is published to Packagist.
-
-Developed with help from [Claude Code](https://claude.com/claude-code).
