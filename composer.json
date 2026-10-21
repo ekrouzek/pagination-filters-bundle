@@ -4,7 +4,7 @@
     "type": "symfony-bundle",
     "require": {
         "php": ">=8.0.1",
-        "nette/utils": "^3.2",
+        "nette/utils": "^3.2 || ^4.0",
         "friendsofsymfony/rest-bundle": "^3.3",
         "doctrine/orm": "^3.5.0",
         "symfony/uid": "^5.4 || ^6.0 || ^7.0",
